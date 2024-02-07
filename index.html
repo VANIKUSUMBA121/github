@@ -1,0 +1,264 @@
+<!-- Github link
+    https://vanikusumba121.github.io/github.io-/
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            background-image: url('https://www.rawaccounting.co.uk/wp-content/uploads/2022/08/Screenshot-2022-08-23-095443.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .calculator {
+            background-color: gray;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .error input {
+            color: #ff0000; /* Red for error text */
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: right;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 5px;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ccc;
+        }
+
+        .operator {
+            background-color: #ff9a8b;
+        }
+
+        .clear {
+            background-color: #a8a8a8;
+        }
+
+        .plusButton{
+                background-color: lightpink;
+        }
+        .subButton{
+            background-color:lightseagreen;
+        }
+        .divButton {
+            background-color: lightslategrey;
+        }
+
+        .mulButton {
+            background-color: lightsalmon;
+        }
+
+        .equals {
+            background-color: lightgreen;
+        }
+        .divisionButon{
+            background-color: lightcyan;
+        }
+        .sqrtButton {
+            background-color: #ffcc66; /* Same color as plus and div buttons */
+        }
+
+        /* Style for the image */
+        img {
+            width: 80px;
+            /* Adjust the width as needed */
+            height: auto;
+            margin-right: 10px;
+            /* Add some margin for spacing */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator" id="calculator">
+        <div style="display: flex;">
+            <img src="https://t3.ftcdn.net/jpg/03/97/24/14/360_F_397241410_haDOV4YnWCR7aYahAe8MPdnUBTBMADfi.jpg "alt="Calculator Icon">
+            <h1>&nbsp;&nbsp;&nbsp;JS Calculator</h1>
+        </div>
+        <input type="text" id="display" readonly="">
+        <div class="buttons">
+            <button onclick="appendToDisplay('**')">POW</button>
+            <button onclick="increment()">INC</button>
+            <button onclick="decrement()">DEC</button>
+            <button class="clear" onclick="clearDisplay()">AC</button>
+            <button onclick="appendToDisplay('+')" class="plusButton">+</button>
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('-')" class="subButton">-</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('*')" class="mulButton">x</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('/')" class="divButton">÷</button>
+            <button onclick="appendToDisplay('%')" class="divisionButon">%</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="calculateSquareRoot()" class="sqrtButton">√</button>
+            <button class="equals" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let displayField = document.getElementById('display');
+        let calculator = document.getElementById('calculator');
+
+        function appendToDisplay(value) 
+        {
+             // Get the last character in the current display value
+            let lastChar = displayField.value.slice(-1);
+            // Check if the new value and the last character are both operators (+, -, *, /)
+            if (['+', '-', '*', '/'].includes(value) && ['+', '-', '*', '/'].includes(lastChar)) 
+            {
+                 // If both the new value and last character are operators, do nothing and return
+                return;
+            }
+             // If the conditions above are not met, append the new value to the display
+            displayField.value += value;
+            calculator.classList.remove('error'); // Remove error class when new input is added
+        }
+
+        function clearDisplay() {
+            displayField.value = '';
+            calculator.classList.remove('error'); // Remove error class when clearing display
+        }
+
+        function calculate() {
+            try {
+                let result = eval(displayField.value);
+                if (isNaN(result) || !isFinite(result)) {
+                    displayField.value = "Error";
+                    calculator.classList.add('error'); // Add error class on error
+                } else {
+                    displayField.value = result;
+                    calculator.classList.remove('error'); // Remove error class on successful calculation
+                }
+            } catch (error) {
+                displayField.value = 'Error';
+                calculator.classList.add('error'); // Add error class on error
+            }
+        }
+
+        function calculateSquareRoot() {
+            let currentValue = parseFloat(displayField.value);
+            if (!isNaN(currentValue) && currentValue >= 0) {
+                let result = Math.sqrt(currentValue);
+                displayField.value = result;
+                calculator.classList.remove('error'); // Remove error class on successful square root calculation
+            } else {
+                displayField.value = 'Error';
+                calculator.classList.add('error'); // Add error class on invalid square root calculation
+            }
+        }
+
+        function increment() {
+            let currentValue = parseFloat(displayField.value);
+            if (!isNaN(currentValue)) {
+                displayField.value = currentValue + 1;
+                calculator.classList.remove('error'); // Remove error class when incrementing
+            }
+        }
+
+        function decrement() {
+            let currentValue = parseFloat(displayField.value);
+            if (!isNaN(currentValue)) {
+                displayField.value = currentValue - 1;
+                calculator.classList.remove('error'); // Remove error class when decrementing
+            }
+        }
+
+        function backspace() {
+            let currentValue = displayField.value;
+            displayField.value = currentValue.slice(0, -1);
+            calculator.classList.remove('error'); // Remove error class when backspacing
+        }
+
+        document.addEventListener('keydown', function (event) {
+            const key = event.key;
+            switch (key) {
+                case 'Enter':
+                    event.preventDefault();
+                    calculate();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '.':
+                    event.preventDefault();
+                    appendToDisplay(key);
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    appendToDisplay(key);
+                    break;
+                case 'i':
+                    increment();
+                    break;
+                case 'd':
+                    decrement();
+                    break;
+                case 'Backspace':
+                    backspace();
+                    break;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
